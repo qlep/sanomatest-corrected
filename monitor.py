@@ -1,5 +1,6 @@
 #must remember to run in pyth3. Unicode is a bitch.
 import sys
+from datetime import datetime
 import requests
 
 #interval = sys.argv[1]
@@ -25,16 +26,18 @@ def responseGetter(page):
 
 def pageChecker(checkstring):
     logs = open('logs.txt', 'a')
+    now = datetime.now()
 
     for page in pageLister():
-        content = responseGetter(page)
         try:
+            content = responseGetter(page)
+
             if checkstring in content.text:
-                logs.writelines('{0}: Status:{1} --- Response time:{2}s --- Check:{3}\n'.format(content.url, content.status_code, content.elapsed, "YAS!1"))
+                logs.write('{0} {1}: Status:{2} --- Response time:{3}s --- Check:{4}\n'.format(now, content.url, content.status_code, content.elapsed, "YAS!1"))
             else:
-                logs.writelines('{0}: Status:{1} --- Response time:{2}s --- Check:{3}\n'.format(content.url, content.status_code, content.elapsed, "NOPE"))
+                logs.write('{0} {1}: Status:{2} --- Response time:{3}s --- Check:{4}\n'.format(now, content.url, content.status_code, content.elapsed, "NOPE"))
         except:
-            logs.writelines('incorrect URL format: "{}"\n'.format(page))
+            logs.write('{0} {1}: incorrect URL format\n'.format(now, page))
 
     logs.close()
 

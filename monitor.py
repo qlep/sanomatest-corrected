@@ -1,11 +1,10 @@
-from http.client import responses
+#must remember to run in pyth3. Unicode is a bitch.
 import sys
 import requests
 
-#pagurl = sys.argv[1]
-#checkstring = sys.argv[2]
+#interval = sys.argv[1]
 
-def listPages():
+def pageLister():
     pagelist = []
     pages = open('pages.txt', 'r')
     pagestrings = pages.readlines()
@@ -17,23 +16,26 @@ def listPages():
 
     return pagelist
 
-def getPageResponse(page):
+def responseGetter(page):
     try:
         response = requests.get(page)
     except:
         response = page
-    
     return response
 
 def pageChecker(checkstring):
-    for page in listPages():
-        content = getPageResponse(page)
+    logs = open('logs.txt', 'a')
+
+    for page in pageLister():
+        content = responseGetter(page)
         try:
             if checkstring in content.text:
-                print(content.url + '---' + str(content.status_code) + '---' + str(content.elapsed) + 's' + '---' + 'YASS!!1')
+                logs.writelines('{0}: Status:{1} --- Response time:{2}s --- Check:{3}\n'.format(content.url, content.status_code, content.elapsed, "YAS!1"))
             else:
-                print(content.url + '---' + str(content.status_code) + '---' + str(content.elapsed) + '---' + 'YATSI!!1')
+                logs.writelines('{0}: Status:{1} --- Response time:{2}s --- Check:{3}\n'.format(content.url, content.status_code, content.elapsed, "NOPE"))
         except:
-            print('incorrect URF format: ' + page)
+            logs.writelines('incorrect URL format: "{}"\n'.format(page))
+
+    logs.close()
 
 pageChecker('login')

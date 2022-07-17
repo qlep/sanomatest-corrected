@@ -1,9 +1,12 @@
 #must remember to run in pyth3. Unicode is a bitch.
 import sys
 from datetime import datetime
+from time import sleep
 import requests
 
 #interval = sys.argv[1]
+now = datetime.now()
+checkstring = "login"
 
 def pageLister():
     pagelist = []
@@ -17,28 +20,34 @@ def pageLister():
 
     return pagelist
 
-def responseGetter(page):
-    try:
-        response = requests.get(page)
-    except:
-        response = page
-    return response
+def responseGetter(pagelist):
 
-def pageChecker(checkstring):
-    logs = open('logs.txt', 'a')
-    now = datetime.now()
-
-    for page in pageLister():
+    for page in pagelist:
         try:
-            content = responseGetter(page)
+            response = requests.get(page)
+            contentChecker(checkstring, response)
 
-            if checkstring in content.text:
-                logs.write('{0} {1}: Status:{2} --- Response time:{3}s --- Check:{4}\n'.format(now, content.url, content.status_code, content.elapsed, "YAS!1"))
-            else:
-                logs.write('{0} {1}: Status:{2} --- Response time:{3}s --- Check:{4}\n'.format(now, content.url, content.status_code, content.elapsed, "NOPE"))
         except:
-            logs.write('{0} {1}: incorrect URL format\n'.format(now, page))
+            print('{0} {1}: incorrect URL format\n'.format(now, page))
 
+def contentChecker(checkstring, content):
+    logs = open('logs.txt', 'a')
+    content = content
+    logline = '{0} {1}: Status: {2} --- Response time:{3}s'.format(now, content.url, content.status_code, content.elapsed)
+
+    if checkstring in content.text:
+        logs.write('{0} --- Checkstring: {1}\n'.format(logline, 'YES'))
+    else:
+        logs.write('{0} --- Checkstring: {1}\n'.format(logline, 'Nope'))
+    
     logs.close()
 
-pageChecker('login')
+def processLooper():
+
+    while True:
+        responseGetter(pageLister())
+        #sleep(interval)
+
+#processLooper()
+
+responseGetter(pageLister())

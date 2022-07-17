@@ -1,4 +1,4 @@
-#must remember to run in pyth3. Unicode is a bitch.
+
 import sys
 from datetime import datetime
 from time import sleep
@@ -6,32 +6,44 @@ import requests
 
 #interval = sys.argv[1]
 checkstring = "login"
+urlfilename = 'pagess.txt'
 
 def pageLister():
-    pagelist = []
-    pages = open('pages.txt', 'r')
-    pagestrings = pages.readlines()
-    pages.close()
+    '''reads from file list of urls, removes unnecessary newlines'''
 
-    for page in pagestrings:
-        page = page.replace('\n', '')
-        pagelist.append(page)
+    urllist = []
+    urlfile = open(urlfilename, 'r')
+    urlstrings = urlfile.readlines()
+    urlfile.close()
 
-    return pagelist
+    for url in urlstrings:
+        url = url.replace('\n', '')
+        urllist.append(url)
 
-def responseGetter(pagelist):
-    logs = open('logs.txt', 'a')
+    return urllist
 
-    for page in pagelist:
-        try:
-            response = requests.get(page)
-            logs.write(contentChecker(checkstring, response))
-        except:
-            logs.write('{0} {1}: incorrect URL format\n'.format(datetime.now(), page))
+def responseGetter(urllist):
+    '''takes list of urls as parameter, makes page requests'''
+
+    log = ''
+
+    if len(urllist) != 0:
+        for url in urllist:
+            try:
+                response = requests.get(url)
+                log = contentChecker(checkstring, response)
+                print(log)
+            except:
+                log = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
+    else:
+        log = 'Hey, file is empty!\n'
     
-    logs.close()
+    print(log)
+
+    return log
 
 def contentChecker(checkstring, content):
+    '''takes content of requested pages and checkstring as parameters and performes checks'''
     content = content
     logline = '{0} {1}: Status: {2} --- Response time:{3}s'.format(datetime.now(), content.url, content.status_code, content.elapsed)
 
@@ -42,13 +54,18 @@ def contentChecker(checkstring, content):
             return '{0} --- Checkstring: {1}\n'.format(logline, 'Nope')
     else:
         return logline + '\n'
-    
-    
 
 def processLooper():
+    run = True
 
-    while True:
-        responseGetter(pageLister())
+    while run:
+        logs = open('logs.txt', 'a')
+        logs.writelines(responseGetter(pageLister()))
+        logs.close()
+        
+        if 'file is empty' in responseGetter(pageLister()):
+            run = False
+
         sleep(5)
-
+        
 processLooper()

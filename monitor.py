@@ -23,7 +23,7 @@ def pageLister():
     return urllist
 
 def responseGetter(urllist):
-    '''takes list of urls as parameter, makes page requests'''
+    '''takes list of urls as parameter, makes page requests, returns logs'''
 
     log = ''
 
@@ -32,7 +32,6 @@ def responseGetter(urllist):
             try:
                 response = requests.get(url)
                 log = contentChecker(checkstring, response)
-                print(log)
             except:
                 log = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
     else:
@@ -43,29 +42,33 @@ def responseGetter(urllist):
     return log
 
 def contentChecker(checkstring, content):
-    '''takes content of requested pages and checkstring as parameters and performes checks'''
+    '''takes content of requested pages and checkstring as parameters, performes checks, returns result strings'''
     content = content
-    logline = '{0} {1}: Status: {2} --- Response time:{3}s'.format(datetime.now(), content.url, content.status_code, content.elapsed)
+    resultstring = '{0} {1}: Status: {2} --- Response time:{3}s'.format(datetime.now(), content.url, content.status_code, content.elapsed)
 
     if content.status_code == 200:
         if checkstring in content.text:
-            return '{0} --- Checkstring: {1}\n'.format(logline, 'YES')
+            return '{0} --- Checkstring: {1}\n'.format(resultstring, 'YES')
         else:
-            return '{0} --- Checkstring: {1}\n'.format(logline, 'Nope')
+            return '{0} --- Checkstring: {1}\n'.format(resultstring, 'Nope')
     else:
-        return logline + '\n'
+        return resultstring + '\n'
 
 def processLooper():
+    '''loops process, writes logs to file, breaks on empty file'''
+
     run = True
 
     while run:
         logs = open('logs.txt', 'a')
-        logs.writelines(responseGetter(pageLister()))
-        logs.close()
-        
-        if 'file is empty' in responseGetter(pageLister()):
+        log = responseGetter(pageLister())
+
+        if 'file is empty' in log:
             run = False
 
+        logs.writelines(log)
+        logs.close()
+
         sleep(5)
-        
+
 processLooper()

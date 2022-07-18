@@ -57,16 +57,14 @@ def contentChecker(checkstring, content):
 def processLooper():
     '''loops process, writes logs to file, breaks on empty file'''
 
-    run = True
-
-    while run:
+    while True:
         
         logs = open('logs.txt', 'a')
         log = responseGetter(pageLister())
         
         if 'file is empty' in log:
             break
-        
+
         logs.writelines(log)
         logs.close()
 

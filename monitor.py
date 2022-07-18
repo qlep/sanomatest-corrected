@@ -60,11 +60,13 @@ def processLooper():
     run = True
 
     while run:
-        if 'file is empty' in log:
-            break
         
         logs = open('logs.txt', 'a')
         log = responseGetter(pageLister())
+        
+        if 'file is empty' in log:
+            break
+        
         logs.writelines(log)
         logs.close()
 

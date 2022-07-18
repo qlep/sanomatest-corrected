@@ -4,9 +4,9 @@ from datetime import datetime
 from time import sleep
 import requests
 
-#interval = sys.argv[1]
+interval = int(sys.argv[1])
 checkstring = "login"
-urlfilename = 'pagess.txt'
+urlfilename = 'pages.txt'
 
 def pageLister():
     '''reads from file list of urls, removes unnecessary newlines'''
@@ -22,27 +22,20 @@ def pageLister():
 
     return urllist
 
-def responseGetter(urllist):
+def responseGetter(url):
     '''takes list of urls as parameter, makes page requests, returns logs'''
-
     log = ''
-
-    if len(urllist) != 0:
-        for url in urllist:
-            try:
-                response = requests.get(url)
-                log = contentChecker(checkstring, response)
-            except:
-                log = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
-    else:
-        log = 'Hey, file is empty!\n'
-    
-    print(log)
+    try:
+        response = requests.get(url)
+        log = contentChecker(checkstring, response)
+    except:
+        log = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
 
     return log
 
 def contentChecker(checkstring, content):
     '''takes content of requested pages and checkstring as parameters, performes checks, returns result strings'''
+    
     content = content
     resultstring = '{0} {1}: Status: {2} --- Response time:{3}s'.format(datetime.now(), content.url, content.status_code, content.elapsed)
 
@@ -54,20 +47,22 @@ def contentChecker(checkstring, content):
     else:
         return resultstring + '\n'
 
-def processLooper():
+def processLooper(urllist):
     '''loops process, writes logs to file, breaks on empty file'''
+    
+    urllist = urllist
+    if len(urllist) == 0:
+        print('File is empty!')
+    else:
+        while True:
+            for url in urllist:
+                logs = open('logs.txt', 'a')
+                log = responseGetter(url)
+                print(log)
 
-    while True:
-        
-        logs = open('logs.txt', 'a')
-        log = responseGetter(pageLister())
-        
-        if 'file is empty' in log:
-            break
+                logs.write(log)
+                logs.close()
 
-        logs.writelines(log)
-        logs.close()
+            sleep(interval)
 
-        sleep(5)
-
-processLooper()
+processLooper(pageLister())

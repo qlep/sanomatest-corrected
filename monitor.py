@@ -4,34 +4,44 @@ from datetime import datetime
 from time import sleep
 import requests
 
-interval = int(sys.argv[1])
-checkstring = "login"
-urlfilename = 'pages.txt'
+checkstring = 'login'
 
 def pageLister():
     '''reads from file list of urls, removes unnecessary newlines'''
 
     urllist = []
-    urlfile = open(urlfilename, 'r')
-    urlstrings = urlfile.readlines()
-    urlfile.close()
+    urlstrings = []
 
-    for url in urlstrings:
-        url = url.replace('\n', '')
-        urllist.append(url)
+    try:
+        urlfilename = sys.argv[1]
+        urlfile = open(urlfilename, 'r')
+        urlstrings = urlfile.readlines()
+        urlfile.close()
 
-    return urllist
+        for url in urlstrings:
+            url = url.replace('\n', '')
+            urllist.append(url)
+
+        return urllist
+
+    except IndexError:
+       
+
+        return None
+
 
 def responseGetter(url):
     '''takes list of urls as parameter, makes page requests, returns logs'''
-    log = ''
+    
+    resultstring = ''
+
     try:
         response = requests.get(url)
-        log = contentChecker(checkstring, response)
+        resultstring = contentChecker(checkstring, response)
     except:
-        log = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
+        resultstring = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
 
-    return log
+    return resultstring
 
 def contentChecker(checkstring, content):
     '''takes content of requested pages and checkstring as parameters, performes checks, returns result strings'''
@@ -50,19 +60,26 @@ def contentChecker(checkstring, content):
 def processLooper(urllist):
     '''loops process, writes logs to file, breaks on empty file'''
     
-    urllist = urllist
-    if len(urllist) == 0:
-        print('File is empty!')
-    else:
-        while True:
-            for url in urllist:
-                logs = open('logs.txt', 'a')
-                log = responseGetter(url)
-                print(log)
+    try:
+        urllist = urllist
 
-                logs.write(log)
-                logs.close()
+        if len(urllist) != 0:
+            while True:
+                for url in urllist:
+                    logs = open('logs.txt', 'a')
+                    log = responseGetter(url)
+                    print(log)
+                    logs.write(log)
+                    logs.close()
 
-            sleep(interval)
+                try:
+                    interval = int(sys.argv[3])
+                    sleep(interval)
+                except:
+                    sleep(5)
+        else:
+            print('File is empty!')
+    except:
+         print('No filename provided!')
 
 processLooper(pageLister())

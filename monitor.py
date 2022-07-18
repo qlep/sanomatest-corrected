@@ -25,10 +25,7 @@ def pageLister():
         return urllist
 
     except IndexError:
-       
-
         return None
-
 
 def responseGetter(url):
     '''takes list of urls as parameter, makes page requests, returns logs'''

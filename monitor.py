@@ -22,11 +22,14 @@ def pageLister():
             url = url.replace('\n', '')
             urllist.append(url)
         
-        return urllist
-
+        if len(urllist) != 0:
+            return urllist
+        else:
+            print('File is empty!')
+            return None
     except IndexError:
-        urllist.append(0)
-        return urllist
+        print('No file name given!')
+        return None
 
 def responseGetter(url):
     '''takes list of urls as parameter, makes page requests, returns logs'''
@@ -59,9 +62,10 @@ def contentChecker(checkstring, content):
 
 def processLooper(urllist):
     '''loops process, writes logs to file, breaks on empty file'''
-    urllist = urllist
 
-    if urllist[0] != 0:
+    urllist = urllist
+    
+    if urllist:
         while True:
             for url in urllist:
                 logs = open('logs.txt', 'a')
@@ -71,13 +75,8 @@ def processLooper(urllist):
                 logs.close()
 
             try:
-                interval = int(sys.argv[3])
-                sleep(interval)
+                sleep(int(sys.argv[2]))
             except IndexError:
                 sleep(5)
-    elif urllist[0] == 0:
-        print('No filename provided!')
-    else:
-        print('File is empty!')
 
 processLooper(pageLister())

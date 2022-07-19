@@ -21,11 +21,12 @@ def pageLister():
         for url in urlstrings:
             url = url.replace('\n', '')
             urllist.append(url)
-
+        
         return urllist
 
     except IndexError:
-        return None
+        urllist.append(0)
+        return urllist
 
 def responseGetter(url):
     '''takes list of urls as parameter, makes page requests, returns logs'''
@@ -35,6 +36,8 @@ def responseGetter(url):
     try:
         response = requests.get(url)
         resultstring = contentChecker(checkstring, response)
+    except requests.exceptions.ConnectionError:
+        resultstring = '{0} {1}: page does not exsist\n'.format(datetime.now(), url)
     except:
         resultstring = '{0} {1}: incorrect URL format\n'.format(datetime.now(), url)
 
@@ -56,27 +59,25 @@ def contentChecker(checkstring, content):
 
 def processLooper(urllist):
     '''loops process, writes logs to file, breaks on empty file'''
-    
-    try:
-        urllist = urllist
+    urllist = urllist
 
-        if len(urllist) != 0:
-            while True:
-                for url in urllist:
-                    logs = open('logs.txt', 'a')
-                    log = responseGetter(url)
-                    print(log)
-                    logs.write(log)
-                    logs.close()
+    if urllist[0] != 0:
+        while True:
+            for url in urllist:
+                logs = open('logs.txt', 'a')
+                log = responseGetter(url)
+                print(log)
+                logs.write(log)
+                logs.close()
 
-                try:
-                    interval = int(sys.argv[3])
-                    sleep(interval)
-                except:
-                    sleep(5)
-        else:
-            print('File is empty!')
-    except:
-         print('No filename provided!')
+            try:
+                interval = int(sys.argv[3])
+                sleep(interval)
+            except IndexError:
+                sleep(5)
+    elif urllist[0] == 0:
+        print('No filename provided!')
+    else:
+        print('File is empty!')
 
 processLooper(pageLister())

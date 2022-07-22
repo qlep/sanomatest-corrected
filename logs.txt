@@ -1,0 +1,21 @@
+2022-07-21 11:22:27.067540 https://www.google.com/: Status: 200 --- Response time:0:00:00.078709s --- Checkstring: Nope
+2022-07-21 11:22:27.673160 https://www.virittamohelsinki.fi/: Status: 200 --- Response time:0:00:00.600324s --- Checkstring: Nope
+2022-07-21 11:22:27.946578 https://www.youtube.com/: Status: 200 --- Response time:0:00:00.077275s --- Checkstring: YES
+2022-07-21 11:22:28.291610 https://www.instagram.com/: Status: 200 --- Response time:0:00:00.337845s --- Checkstring: YES
+2022-07-21 11:22:28.530716 https://www.tiktok.com/: Status: 200 --- Response time:0:00:00.232751s --- Checkstring: Nope
+2022-07-21 11:22:28.534422 www.mail.ru: incorrect URL format
+2022-07-21 11:22:28.891676 https://www.sanoma.fi/gleb/: Status: 404 --- Response time:0:00:00.350288s
+2022-07-21 11:22:33.973474 https://www.google.com/: Status: 200 --- Response time:0:00:00.076080s --- Checkstring: Nope
+2022-07-21 11:22:34.196255 https://www.virittamohelsinki.fi/: Status: 200 --- Response time:0:00:00.217287s --- Checkstring: Nope
+2022-07-21 11:22:35.155882 https://www.youtube.com/: Status: 200 --- Response time:0:00:00.062692s --- Checkstring: YES
+2022-07-21 11:22:35.377350 https://www.instagram.com/: Status: 200 --- Response time:0:00:00.209153s --- Checkstring: YES
+2022-07-21 11:22:35.555566 https://www.tiktok.com/: Status: 200 --- Response time:0:00:00.179574s --- Checkstring: Nope
+2022-07-21 11:22:35.563528 www.mail.ru: incorrect URL format
+2022-07-21 11:22:36.028001 https://www.sanoma.fi/gleb/: Status: 404 --- Response time:0:00:00.453547s
+2022-07-21 11:22:41.126113 https://www.google.com/: Status: 200 --- Response time:0:00:00.080403s --- Checkstring: Nope
+2022-07-21 11:22:41.436073 https://www.virittamohelsinki.fi/: Status: 200 --- Response time:0:00:00.303440s --- Checkstring: Nope
+2022-07-21 11:22:42.113550 https://www.youtube.com: incorrect URL format
+2022-07-21 11:22:42.305635 https://www.instagram.com/: Status: 200 --- Response time:0:00:00.174325s --- Checkstring: YES
+2022-07-21 11:22:42.473528 https://www.tiktok.com/: Status: 200 --- Response time:0:00:00.170812s --- Checkstring: Nope
+2022-07-21 11:22:42.484719 www.mail.ru: incorrect URL format
+2022-07-21 11:22:43.008690 https://www.sanoma.fi/gleb/: Status: 404 --- Response time:0:00:00.524425s
